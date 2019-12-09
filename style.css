@@ -1,0 +1,30 @@
+button{
+    border: 0;
+    border-radius: .5em;
+    padding: 1em;
+    margin-bottom: .5em;
+    background-color: #a3ce5d;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: bold;
+    min-width: 160px;
+}
+
+#out{
+    text-align: center;
+    width: 20px;
+    padding: 1em;
+    margin: 1em;
+    border: 2px solid #a3ce5d;
+}
+
+progress{
+    height: 30px;
+    margin: .6em;
+    border: 2px solid #a3ce5d;
+}
+
+
+button:hover{
+    background-color: #a4c35c;
+}
