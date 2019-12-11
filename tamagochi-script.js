@@ -1,157 +1,157 @@
+class Randomizer {
+    static random(a,b) {
+        let rand = a + Math.random() * (b + 1 - a);
+        return Math.floor(rand);
+    }
+}
+
+class HtmlElemRenderer {
+    static  generateProgressBar(elemId,max,value){
+        return document.querySelector(elemId).innerHTML = `<progress value="${value}" max="${max}"></progress>`;
+    }
+}
+
+class ButtonController {
+    static buttonControl(typeBlock,controlBlock) {
+        document.querySelector('#type').style.display = typeBlock;
+        document.querySelector('.control-buttons').style.display = controlBlock;
+    }
+}
+
 class Tamagotchi {
-    constructor(food, clean, happiness, health, social, money, decreasingPoint, decreasingInt, maxStats) {
-        this.food = food;
-        this.clean = clean;
-        this.happiness = happiness;
-        this.health = health;
-        this.social = social;
-        this.money = money;
+    static get EAT_PROGRESS_BAR_NAME() { return '.eatProgressBarElem' };
+    static get CLEAN_PROGRESS_BAR_NAME() { return '.washProgressBarElem' };
+    static get HAPPY_PROGRESS_BAR_NAME() { return '.runProgressBarElem' };
+    static get HEALTH_PROGRESS_BAR_NAME() { return '.healthProgressBarElem' };
+    static get SOCIAL_PROGRESS_BAR_NAME() { return '.socialProgressBarElem' };
+    static get MONEY_PROGRESS_BAR_NAME() { return '.moneyProgressBarElem' };
+
+    constructor(decreasingPoint, decreasingInt, maxStat) {
         this.decreasingPoint = decreasingPoint;
         this.decreasingInt = decreasingInt;
-        this.maxStats = maxStats;
+        this.maxStat = maxStat;
+
+        this.food = Randomizer.random(50, this.maxStat);
+        this.clean = Randomizer.random(50, this.maxStat);
+        this.happiness = Randomizer.random(50, this.maxStat);
+        this.health = Randomizer.random(50, this.maxStat);
+        this.social = Randomizer.random(50, this.maxStat);
+        this.money = Randomizer.random(50, this.maxStat);
     }
 
-    getRand(arr){
-        let rand = Math.floor(Math.random() * arr.length);
-        arr[rand] = this.checkStat(arr[rand], random(10,50));
-        return arr[rand];
-    }
-
-    getRandId(arr) {
-        let rand = Math.floor(Math.random() * arr.length);
-        return arr[rand];
-    }
-
-    randomHelp(){
-        let statArr = [
-            this.food,
-            this.clean,
-            this.happiness,
-            this.health,
-            this.social,
-            this.money
-        ]
-        let idArr = [
-            '.eatProgressBarElem',
-            '.washProgressBarElem',
-            '.runProgressBarElem',
-            '.healthProgressBarElem',
-            '.socialProgressBarElem',
-            '.moneyProgressBarElem'
-        ]
-        return generateProgressBar(`${this.getRandId(idArr)}`,this.maxStats,`${this.getRand(statArr)}`)
-    }
-
-    eatFood() {
+    registerEatFoodHtmlClickEventHandler() {
         eat.onclick = () => {
-            this.food = this.checkStat(this.food, 30);
-            generateProgressBar('.eatProgressBarElem', this.maxStats, this.food);
+            this.food = this.returnIncreasedValue(this.food, 30);
             this.clean -= 20;
-            generateProgressBar('.washProgressBarElem', this.maxStats, this.clean);
+            this.renderStatBar();
         };
     }
 
-    washUp() {
+    registerWashUpHtmlClickEventHandler() {
         clean.onclick = () => {
-            this.clean = this.checkStat(this.clean, 40);
-            generateProgressBar('.washProgressBarElem', this.maxStats, this.clean);
+            this.clean = this.returnIncreasedValue(this.clean, 40);
             this.happiness -= 20;
-            generateProgressBar('.runProgressBarElem', this.maxStats, this.happiness);
+            this.renderStatBar();
         };
     }
 
-    goWalk() {
+    registerGoWalkHtmlClickEventHandler() {
         run.onclick = () => {
-            this.happiness = this.checkStat(this.happiness, 25);
-            generateProgressBar('.runProgressBarElem', this.maxStats, this.happiness);
+            this.happiness = this.returnIncreasedValue(this.happiness, 25);
             this.food -= 10;
-            generateProgressBar('.eatProgressBarElem', this.maxStats, this.food);
+            this.renderStatBar();
         };
     }
 
     //new actions here
-    visitDoc(){
+    registerVisitDocHtmlClickEventHandler(){
         doc.onclick = () => {
-            this.health = this.checkStat(this.health,30);
-            generateProgressBar('.healthProgressBarElem', this.maxStats, this.health);
+            this.health = this.returnIncreasedValue(this.health,30);
             this.money -= 20;
-            generateProgressBar('.moneyProgressBarElem', this.maxStats, this.money);
+            this.renderStatBar();
         }
     }
 
-    goToBar(){
+    registerGoToBarHtmlClickEventHandler(){
         bar.onclick = () => {
-            this.social = this.checkStat(this.social,40);
-            generateProgressBar('.socialProgressBarElem', this.maxStats, this.social);
-            this.food = this.checkStat(this.food,10);
-            generateProgressBar('.eatProgressBarElem', this.maxStats, this.food);
+            this.social = this.returnIncreasedValue(this.social,40);
+            this.food = this.returnIncreasedValue(this.food,10);
             this.money -= 20;
-            generateProgressBar('.moneyProgressBarElem', this.maxStats, this.money);
             this.health -= 10;
-            generateProgressBar('.healthProgressBarElem', this.maxStats, this.health);
+            this.renderStatBar();
         }
     }
 
-    goToWork(){
+    registerGoToWorkHtmlClickEventHandler(){
         work.onclick = () => {
             this.social -= 20;
-            generateProgressBar('.socialProgressBarElem', this.maxStats, this.social);
             this.food -= 10;
-            generateProgressBar('.eatProgressBarElem', this.maxStats, this.food);
-            this.money = this.checkStat(this.money, 50);
-            generateProgressBar('.moneyProgressBarElem', this.maxStats, this.money);
+            this.money = this.returnIncreasedValue(this.money, 50);
             this.health -= 10;
-            generateProgressBar('.healthProgressBarElem', this.maxStats, this.health);
+            this.renderStatBar();
         }
     }
 
-    buyFood() {
+    registerBuyFoodHtmlClickEventHandler() {
         buy.onclick = () => {
-            this.food = this.checkStat(this.food, 20);
-            generateProgressBar('.eatProgressBarElem', this.maxStats, this.food);
+            this.food = this.returnIncreasedValue(this.food, 20);
             this.money -= 20;
-            generateProgressBar('.moneyProgressBarElem', this.maxStats, this.money);
+            this.renderStatBar();
         }
     }
 
-    startBusiness() {
+    registerStartBusinessHtmlClickEventHandler() {
         business.onclick = () => {
-            this.money = this.checkStat(this.money,100);
-            generateProgressBar('.moneyProgressBarElem', this.maxStats, this.money);
-            this.happiness = this.checkStat(this.happiness,100);
-            generateProgressBar('.runProgressBarElem', this.maxStats, this.happiness);
-            this.social = this.checkStat(this.social, 20);
-            generateProgressBar('.socialProgressBarElem', this.maxStats, this.social);
+            this.money = this.returnIncreasedValue(this.money,100);
+            this.happiness = this.returnIncreasedValue(this.happiness,100);
+            this.social = this.returnIncreasedValue(this.social, 20);
             this.health -= 100;
-            generateProgressBar('.healthProgressBarElem', this.maxStats, this.health);
+            this.renderStatBar();
         }
     }
 
-    checkStat(stat, increaseBy){
+    returnIncreasedValue(stat, increaseBy){
         let result = stat + increaseBy;
-        return (result > this.maxStats) ? this.maxStats : result
-    }
-
-    decreasingInterval(){
-        this.intervalRandom = setInterval(this.randomHelp.bind(this), 60000);
-        this.intervalAccess = setInterval(this.decrement.bind(this), this.decreasingInt);
-        this.intervalStopGame = setInterval(this.stopGame.bind(this),1000);
-        buttonControl('none','block');
+        return (result > this.maxStat) ? this.maxStat : result
     }
 
     decrement() {
         this.food -= this.decreasingPoint;
-        generateProgressBar('.eatProgressBarElem', this.maxStats, this.food);
         this.clean -= this.decreasingPoint;
-        generateProgressBar('.washProgressBarElem', this.maxStats, this.clean);
         this.happiness -= this.decreasingPoint;
-        generateProgressBar('.runProgressBarElem', this.maxStats, this.happiness);
         this.health -= this.decreasingPoint;
-        generateProgressBar('.healthProgressBarElem', this.maxStats, this.health);
         this.social -= this.decreasingPoint;
-        generateProgressBar('.socialProgressBarElem', this.maxStats, this.social);
         this.money -= this.decreasingPoint;
-        generateProgressBar('.moneyProgressBarElem', this.maxStats, this.money);
+    }
+
+    startGame(){
+        this.intervalRandom = setInterval(this.randomHelp.bind(this), 60000);
+        this.intervalAccess = setInterval(() =>{
+            this.decrement();
+            this.renderStatBar();
+        }, this.decreasingInt);
+        this.intervalStopGame = setInterval(this.stopGame.bind(this),1000);
+        ButtonController.buttonControl('none','block');
+    }
+
+    stopGame(){
+        if (this.food < 0 || this.clean < 0 || this.happiness < 0 || this.health < 0 || this.social < 0 || this.money < 0){
+            clearInterval(this.intervalRandom);
+            clearInterval(this.intervalAccess);
+            clearInterval(this.timerAccess);
+            ButtonController.buttonControl('block','none');
+            alert(`your Tamagotchi existed ${this.time} sec`);
+            return clearInterval(this.intervalStopGame);
+        }
+    }
+
+    renderStatBar() {
+        HtmlElemRenderer.generateProgressBar('.eatProgressBarElem', this.maxStat, this.food);
+        HtmlElemRenderer.generateProgressBar('.washProgressBarElem', this.maxStat, this.clean);
+        HtmlElemRenderer.generateProgressBar('.runProgressBarElem', this.maxStat, this.happiness);
+        HtmlElemRenderer.generateProgressBar('.healthProgressBarElem', this.maxStat, this.health);
+        HtmlElemRenderer.generateProgressBar('.socialProgressBarElem', this.maxStat, this.social);
+        HtmlElemRenderer.generateProgressBar('.moneyProgressBarElem', this.maxStat, this.money);
     }
 
     timer(){
@@ -164,77 +164,67 @@ class Tamagotchi {
         timerOfLive();
     }
 
-    stopGame(){
-        if (this.food < 0 || this.clean < 0 || this.happiness < 0 || this.health < 0 || this.social < 0 || this.money < 0){
-            clearInterval(this.intervalRandom);
-            clearInterval(this.intervalAccess);
-            clearInterval(this.timerAccess);
-            buttonControl('block','none');
-            alert(`your Tamagotchi existed ${this.time} sec`);
-            return clearInterval(this.intervalStopGame);
-        }
+    randomHelp(){
+        const statArr = [
+            this.food,
+            this.clean,
+            this.happiness,
+            this.health,
+            this.social,
+            this.money
+        ]
+        const idArr = [
+            Tamagotchi.EAT_PROGRESS_BAR_NAME,
+            Tamagotchi.CLEAN_PROGRESS_BAR_NAME,
+            Tamagotchi.HAPPY_PROGRESS_BAR_NAME,
+            Tamagotchi.HEALTH_PROGRESS_BAR_NAME,
+            Tamagotchi.SOCIAL_PROGRESS_BAR_NAME,
+            Tamagotchi.MONEY_PROGRESS_BAR_NAME
+        ]
+        return HtmlElemRenderer.generateProgressBar(`${this.getRandId(idArr)}`,this.maxStat,`${this.getRandStat(statArr)}`)
+    }
+
+    getRandStat(arr){
+        let rand = Math.floor(Math.random() * arr.length);
+        arr[rand] = this.returnIncreasedValue(arr[rand], Randomizer.random(10,50));
+        return arr[rand];
+    }
+
+    getRandId(arr) {
+        let rand = Math.floor(Math.random() * arr.length);
+        return arr[rand];
     }
 
     initialize(){
-        this.eatFood();
-        this.washUp();
-        this.goWalk();
-        this.visitDoc();
-        this.goToBar();
-        this.goToWork();
-        this.buyFood();
-        this.startBusiness();
+        this.registerEatFoodHtmlClickEventHandler();
+        this.registerWashUpHtmlClickEventHandler();
+        this.registerGoWalkHtmlClickEventHandler();
+        this.registerVisitDocHtmlClickEventHandler();
+        this.registerGoToBarHtmlClickEventHandler();
+        this.registerGoToWorkHtmlClickEventHandler();
+        this.registerBuyFoodHtmlClickEventHandler();
+        this.registerStartBusinessHtmlClickEventHandler();
         this.timer();
-        this.decreasingInterval();
+        this.startGame();
     }
 }
 
 
-function buttonControl(typeBlock,controlBlock) {
-    document.querySelector('#type').style.display = typeBlock;
-    document.querySelector('.control-buttons').style.display = controlBlock;
-}
-buttonControl('block','none');
-
-function generateProgressBar(elemId,max,value){
-    return document.querySelector(elemId).innerHTML = `<progress value="${value}" max="${max}"></progress>`;
-}
-
-function random(a,b) {
-    let rand = a + Math.random() * (b + 1 - a);
-    return Math.floor(rand);
-}
-
-
+ButtonController.buttonControl('block','none');
 pug.onclick = function () {
-    let pug = new Tamagotchi(random(50,70),random(50,70),random(50,70),random(50,70),random(50,70),random(50,70),5, 5000,70);
+    let pug = new Tamagotchi(5, 5000, 70);
     pug.initialize();
-    generateProgressBar('.eatProgressBarElem', pug.maxStats, pug.food);
-    generateProgressBar('.washProgressBarElem', pug.maxStats, pug.clean);
-    generateProgressBar('.runProgressBarElem', pug.maxStats, pug.happiness);
-    generateProgressBar('.healthProgressBarElem', pug.maxStats, pug.health);
-    generateProgressBar('.socialProgressBarElem', pug.maxStats, pug.social);
-    generateProgressBar('.moneyProgressBarElem', pug.maxStats, pug.money);
+    pug.renderStatBar();
 }
 
 cat.onclick = function () {
-    let cat = new Tamagotchi(random(50,100),random(50,100),random(50,100),random(50,100),random(50,100),random(50,100),3, 5000,100);
+    let cat = new Tamagotchi(3, 5000, 100);
     cat.initialize();
-    generateProgressBar('.eatProgressBarElem', cat.maxStats, cat.food);
-    generateProgressBar('.washProgressBarElem', cat.maxStats, cat.clean);
-    generateProgressBar('.runProgressBarElem', cat.maxStats, cat.happiness);
-    generateProgressBar('.healthProgressBarElem', cat.maxStats, cat.health);
-    generateProgressBar('.socialProgressBarElem', cat.maxStats, cat.social);
-    generateProgressBar('.moneyProgressBarElem', cat.maxStats, cat.money);
+    cat.renderStatBar();
 }
 
 ninja.onclick = function () {
-    let ninja = new Tamagotchi(random(50,120),random(50,120),random(50,120),random(50,120),random(50,120),random(50,120),7, 7000,150);
+    let ninja = new Tamagotchi(7, 7000, 150);
     ninja.initialize();
-    generateProgressBar('.eatProgressBarElem', ninja.maxStats, ninja.food);
-    generateProgressBar('.washProgressBarElem', ninja.maxStats, ninja.clean);
-    generateProgressBar('.runProgressBarElem', ninja.maxStats, ninja.happiness);
-    generateProgressBar('.healthProgressBarElem', ninja.maxStats, ninja.health);
-    generateProgressBar('.socialProgressBarElem', ninja.maxStats, ninja.social);
-    generateProgressBar('.moneyProgressBarElem', ninja.maxStats, ninja.money);
+    ninja.renderStatBar();
 }
